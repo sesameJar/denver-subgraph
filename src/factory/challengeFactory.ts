@@ -16,5 +16,6 @@ export function loadOrCreateChallenge(
     contract.numChallenges = contract.numChallenges.plus(BigInt.fromI32(1))
     contract.save()
   }
-  return challenge;
+  return challenge as Challenge
+  
 }

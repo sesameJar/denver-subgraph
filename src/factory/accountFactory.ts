@@ -11,11 +11,11 @@ export function loadOrCreateAccount(
   let account = Account.load(accountId)
   if (account == null) {
     account = new Account(accountId.toString())
-    account.numAllChallenges = BigInt.fromI32(0)
+    account.numChallenges = BigInt.fromI32(0)
     account.totalFund = BigInt.fromI32(0)
     let contract = loadOrCreateContract(starRelay._address.toHexString())
     contract.numChallengers = contract.numChallengers.plus(BigInt.fromI32(1))
     contract.save()
   }
-  return account;
+  return account as Account
 }

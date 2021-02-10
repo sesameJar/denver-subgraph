@@ -15,5 +15,6 @@ export function loadOrCreateVideo(
     contract.numVideos = contract.numVideos.plus(BigInt.fromI32(1))
     contract.save()
   }
-  return video;
+  return video as Video
+  
 }

@@ -124,6 +124,32 @@ export class FundsSplitted__Params {
   }
 }
 
+export class Invitation extends ethereum.Event {
+  get params(): Invitation__Params {
+    return new Invitation__Params(this);
+  }
+}
+
+export class Invitation__Params {
+  _event: Invitation;
+
+  constructor(event: Invitation) {
+    this._event = event;
+  }
+
+  get challengeId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get challenger(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get invitee(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+}
+
 export class NewChallengeStarted extends ethereum.Event {
   get params(): NewChallengeStarted__Params {
     return new NewChallengeStarted__Params(this);
@@ -152,6 +178,10 @@ export class NewChallengeStarted__Params {
   get endTimestamp(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
+
+  get ipfsHash(): string {
+    return this._event.parameters[4].value.toString();
+  }
 }
 
 export class NewChallengerJumpedIn extends ethereum.Event {
@@ -177,6 +207,10 @@ export class NewChallengerJumpedIn__Params {
 
   get ipfsHash(): string {
     return this._event.parameters[2].value.toString();
+  }
+
+  get totalFund(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 }
 

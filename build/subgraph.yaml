@@ -1,12 +1,12 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: StarRelay
     network: rinkeby
     source:
-      address: '0x415c3DFd8989D52e2C4f05A65fC5415Be722b2Ac'
+      address: "0x415c3DFd8989D52e2C4f05A65fC5415Be722b2Ac"
       abi: StarRelay
       startBlock: 8047625
     mapping:
@@ -21,7 +21,7 @@ dataSources:
         - Tags
       abis:
         - name: StarRelay
-          file: ./abis/StarRelay.json
+          file: StarRelay/abis/StarRelay.json
       eventHandlers:
         - event: ChainlinkCancelled(indexed bytes32)
           handler: handleChainlinkCancelled
@@ -41,4 +41,4 @@ dataSources:
           handler: handleInvitation
         - event: Test(string)
           handler: handleTest
-      file: ./src/starRelayMapping.ts
+      file: StarRelay/StarRelay.wasm

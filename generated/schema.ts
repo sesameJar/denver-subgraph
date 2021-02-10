@@ -69,6 +69,15 @@ export class Contract extends Entity {
     this.set("numVideos", Value.fromBigInt(value));
   }
 
+  get numInvitations(): BigInt {
+    let value = this.get("numInvitations");
+    return value.toBigInt();
+  }
+
+  set numInvitations(value: BigInt) {
+    this.set("numInvitations", Value.fromBigInt(value));
+  }
+
   get totalFund(): BigInt {
     let value = this.get("totalFund");
     return value.toBigInt();
@@ -215,8 +224,8 @@ export class Challenge extends Entity {
     this.set("videos", Value.fromStringArray(value));
   }
 
-  get invitedAddresses(): Array<string> | null {
-    let value = this.get("invitedAddresses");
+  get invitations(): Array<string> | null {
+    let value = this.get("invitations");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -224,14 +233,11 @@ export class Challenge extends Entity {
     }
   }
 
-  set invitedAddresses(value: Array<string> | null) {
+  set invitations(value: Array<string> | null) {
     if (value === null) {
-      this.unset("invitedAddresses");
+      this.unset("invitations");
     } else {
-      this.set(
-        "invitedAddresses",
-        Value.fromStringArray(value as Array<string>)
-      );
+      this.set("invitations", Value.fromStringArray(value as Array<string>));
     }
   }
 
@@ -436,13 +442,13 @@ export class Video extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get creator(): Bytes {
+  get creator(): string {
     let value = this.get("creator");
-    return value.toBytes();
+    return value.toString();
   }
 
-  set creator(value: Bytes) {
-    this.set("creator", Value.fromBytes(value));
+  set creator(value: string) {
+    this.set("creator", Value.fromString(value));
   }
 
   get challenge(): string {
@@ -470,6 +476,82 @@ export class Video extends Entity {
 
   set uploadTimestamp(value: BigInt) {
     this.set("uploadTimestamp", Value.fromBigInt(value));
+  }
+}
+
+export class Invitation extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Invitation entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Invitation entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Invitation", id.toString(), this);
+  }
+
+  static load(id: string): Invitation | null {
+    return store.get("Invitation", id) as Invitation | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get challenge(): string {
+    let value = this.get("challenge");
+    return value.toString();
+  }
+
+  set challenge(value: string) {
+    this.set("challenge", Value.fromString(value));
+  }
+
+  get challenger(): string {
+    let value = this.get("challenger");
+    return value.toString();
+  }
+
+  set challenger(value: string) {
+    this.set("challenger", Value.fromString(value));
+  }
+
+  get invitee(): string {
+    let value = this.get("invitee");
+    return value.toString();
+  }
+
+  set invitee(value: string) {
+    this.set("invitee", Value.fromString(value));
+  }
+
+  get inviteTxnHash(): string {
+    let value = this.get("inviteTxnHash");
+    return value.toString();
+  }
+
+  set inviteTxnHash(value: string) {
+    this.set("inviteTxnHash", Value.fromString(value));
+  }
+
+  get inviteTimestamp(): BigInt {
+    let value = this.get("inviteTimestamp");
+    return value.toBigInt();
+  }
+
+  set inviteTimestamp(value: BigInt) {
+    this.set("inviteTimestamp", Value.fromBigInt(value));
   }
 }
 
