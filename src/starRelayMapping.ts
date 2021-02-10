@@ -45,21 +45,21 @@ export function handleChainlinkRequested(event: ChainlinkRequested): void {}
 export function handleChallengeResolved(event: ChallengeResolved): void {
 
   let starRelay = StarRelay.bind(event.address)
-
-  // Update challenge
   let challengeId = event.params.challengeId
-  let challenge = loadOrCreateChallenge(starRelay, challengeId)
-  challenge.resolveTxnHash = event.transaction.hash.toHexString()
-  challenge.resolveTimestamp = event.block.timestamp
-  challenge.totalFund = event.params.totalFund
-
+  
+  // Update winning account
   let winner = loadOrCreateAccount(starRelay, event.params.winner.toHexString())
   let wins = winner.wins
   wins.push(challengeId.toString())
   winner.wins = wins
   winner.save()
-
-  challenge.winner = winner
+  
+  // Update challenge
+  let challenge = loadOrCreateChallenge(starRelay, challengeId)
+  challenge.resolveTxnHash = event.transaction.hash.toHexString()
+  challenge.resolveTimestamp = event.block.timestamp
+  challenge.totalFund = event.params.totalFund
+  challenge.winner = winner.id
   challenge.save()
   
 }
@@ -70,9 +70,10 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   
   // Create a new challenge
   let challengeId = event.params.challengeId
-  let contract = StarRelay.bind(event.address)
-  let challenge = loadOrCreateChallenge(contract, challengeId)
-  let challengeStruct = contract.challenges(challengeId)
+  let starRelay = StarRelay.bind(event.address)
+
+  let challenge = loadOrCreateChallenge(starRelay, challengeId)
+  let challengeStruct = starRelay.challenges(challengeId)
   challenge.creator = event.params.creator
   challenge.startTxnHash = event.transaction.hash.toHexString()
   challenge.startTimestamp = event.block.timestamp
@@ -87,7 +88,7 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   challenge.save()
 
   // Create the video
-  let video = loadOrCreateVideo(event.params.ipfsHash)
+  let video = loadOrCreateVideo(starRelay, event.params.ipfsHash)
   video.creator = event.params.creator
   video.challenge = challengeId.toString()
   video.uploadTxnHash = event.transaction.hash.toHexString()
@@ -100,8 +101,10 @@ export function handleNewChallengerJumpedIn(
   event: NewChallengerJumpedIn
 ): void {
 
+  let starRelay = StarRelay.bind(event.address)
+
   // Create the video
-  let video = loadOrCreateVideo(event.params.ipfsHash)
+  let video = loadOrCreateVideo(starRelay, event.params.ipfsHash)
   video.creator = event.params.challenger
   video.challenge = event.params.challengeId.toString()
   video.uploadTxnHash = event.transaction.hash.toHexString()
@@ -109,26 +112,14 @@ export function handleNewChallengerJumpedIn(
   video.save()
 
   // Update the challenge
-  let challenge = loadOrCreateChallenge(event.params.challengeId)
-  challenge.totalFund = event.params.totalFunds
+  let challenge = loadOrCreateChallenge(starRelay, event.params.challengeId)
+  challenge.totalFund = event.params.totalFund
   // challenge.invitedAddresses = 
-  let challengers = challenge.challengers
-  if (!challengers.includes(video.creator.toHexString())) {
-    challengers.push(video.creator.toHexString())
+  // let challengers = challenge.challengers
+  // let newChallenger = loadOrCreateAccount(starRelay, video.creator.toHexString())
+  // if (!challengers.includes(newChallenger)) {
+    // challengers.push(newChallenger)
     challenge.numChallengers = challenge.numChallengers.plus(BigInt.fromI32(1))
-  }
-
-  // Update the platform
-  let platform = Contract.load(event.address.toHexString())
-  if (platform == null) {
-    new Contract(event.address.toHexString())
-    platform.numChallengers = BigInt.fromI32(1)
-  }
-
-  // let platformChallengers = challenge.challengers
-  // if (!challengers.includes(video.creator.toHexString())) {
-  //   challengers.push(video.creator.toHexString())
-  //   challenge.numChallengers = challenge.numChallengers.plus(BigInt.fromI32(1))
   // }
 
 }

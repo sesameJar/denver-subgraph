@@ -11,9 +11,7 @@ export function loadOrCreateChallenge(
   let challenge = Challenge.load(challengeId.toString())
   if (challenge == null) {
     challenge = new Challenge(challengeId.toString())
-    challenge.startTxnHash = ""
-    challenge.startTimestamp = BigInt.fromI32(0)
-    challenge.numChallengers = BigInt.fromI32(0)
+    challenge.numChallengers = BigInt.fromI32(1) // challenge creator counts as a challenger
     let contract = loadOrCreateContract(starRelay._address.toHexString())
     contract.numChallenges = contract.numChallenges.plus(BigInt.fromI32(1))
     contract.save()

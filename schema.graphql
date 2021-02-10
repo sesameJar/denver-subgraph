@@ -9,6 +9,9 @@ type Contract @entity {
 
 # ChallengId as ID
 type Challenge @entity {
+  #########################
+  # set during creation
+  #########################
   id: ID!
   creator: Bytes!
   startTxnHash: String!
@@ -16,18 +19,21 @@ type Challenge @entity {
   title: String
   description: String
   beneficiary: Bytes!
-  invitedAddresses: [String!]
-  videos: [Video!]! @derivedFrom(field: "challenge")
-  challengers: [String!]! 
-  numChallengers: BigInt!
   isPublic: Boolean
-  isActive: Boolean
   endTimestamp: BigInt!
+  minEntryFee: BigInt!
+  #########################
+  # mutable
+  #########################
+  videos: [Video!]! @derivedFrom(field: "challenge")
+  invitedAddresses: [Account!]
+  challengers: [Account!]! @derivedFrom(field: challenges")
+  numChallengers: BigInt!
+  totalFund: BigInt!
   resolveTimestamp: BigInt # null means still ongoing
   resolveTxnHash: String
   winner: Account
-  minEntryFee: BigInt!
-  totalFund: BigInt!
+  isActive: Boolean
 }
 
 # Account eth address as ID

@@ -179,6 +179,42 @@ export class Challenge extends Entity {
     this.set("beneficiary", Value.fromBytes(value));
   }
 
+  get isPublic(): boolean {
+    let value = this.get("isPublic");
+    return value.toBoolean();
+  }
+
+  set isPublic(value: boolean) {
+    this.set("isPublic", Value.fromBoolean(value));
+  }
+
+  get endTimestamp(): BigInt {
+    let value = this.get("endTimestamp");
+    return value.toBigInt();
+  }
+
+  set endTimestamp(value: BigInt) {
+    this.set("endTimestamp", Value.fromBigInt(value));
+  }
+
+  get minEntryFee(): BigInt {
+    let value = this.get("minEntryFee");
+    return value.toBigInt();
+  }
+
+  set minEntryFee(value: BigInt) {
+    this.set("minEntryFee", Value.fromBigInt(value));
+  }
+
+  get videos(): Array<string> {
+    let value = this.get("videos");
+    return value.toStringArray();
+  }
+
+  set videos(value: Array<string>) {
+    this.set("videos", Value.fromStringArray(value));
+  }
+
   get invitedAddresses(): Array<string> | null {
     let value = this.get("invitedAddresses");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -199,15 +235,6 @@ export class Challenge extends Entity {
     }
   }
 
-  get videos(): Array<string> {
-    let value = this.get("videos");
-    return value.toStringArray();
-  }
-
-  set videos(value: Array<string>) {
-    this.set("videos", Value.fromStringArray(value));
-  }
-
   get challengers(): Array<string> {
     let value = this.get("challengers");
     return value.toStringArray();
@@ -226,31 +253,13 @@ export class Challenge extends Entity {
     this.set("numChallengers", Value.fromBigInt(value));
   }
 
-  get isPublic(): boolean {
-    let value = this.get("isPublic");
-    return value.toBoolean();
-  }
-
-  set isPublic(value: boolean) {
-    this.set("isPublic", Value.fromBoolean(value));
-  }
-
-  get isActive(): boolean {
-    let value = this.get("isActive");
-    return value.toBoolean();
-  }
-
-  set isActive(value: boolean) {
-    this.set("isActive", Value.fromBoolean(value));
-  }
-
-  get endTimestamp(): BigInt {
-    let value = this.get("endTimestamp");
+  get totalFund(): BigInt {
+    let value = this.get("totalFund");
     return value.toBigInt();
   }
 
-  set endTimestamp(value: BigInt) {
-    this.set("endTimestamp", Value.fromBigInt(value));
+  set totalFund(value: BigInt) {
+    this.set("totalFund", Value.fromBigInt(value));
   }
 
   get resolveTimestamp(): BigInt | null {
@@ -304,22 +313,13 @@ export class Challenge extends Entity {
     }
   }
 
-  get minEntryFee(): BigInt {
-    let value = this.get("minEntryFee");
-    return value.toBigInt();
+  get isActive(): boolean {
+    let value = this.get("isActive");
+    return value.toBoolean();
   }
 
-  set minEntryFee(value: BigInt) {
-    this.set("minEntryFee", Value.fromBigInt(value));
-  }
-
-  get totalFund(): BigInt {
-    let value = this.get("totalFund");
-    return value.toBigInt();
-  }
-
-  set totalFund(value: BigInt) {
-    this.set("totalFund", Value.fromBigInt(value));
+  set isActive(value: boolean) {
+    this.set("isActive", Value.fromBoolean(value));
   }
 }
 
@@ -353,22 +353,13 @@ export class Account extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get numAllChallenges(): BigInt {
-    let value = this.get("numAllChallenges");
+  get numChallenges(): BigInt {
+    let value = this.get("numChallenges");
     return value.toBigInt();
   }
 
-  set numAllChallenges(value: BigInt) {
-    this.set("numAllChallenges", Value.fromBigInt(value));
-  }
-
-  get numOpenChallenges(): BigInt {
-    let value = this.get("numOpenChallenges");
-    return value.toBigInt();
-  }
-
-  set numOpenChallenges(value: BigInt) {
-    this.set("numOpenChallenges", Value.fromBigInt(value));
+  set numChallenges(value: BigInt) {
+    this.set("numChallenges", Value.fromBigInt(value));
   }
 
   get challenges(): Array<string> | null {
