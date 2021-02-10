@@ -1,6 +1,58 @@
-type Gravatar @entity {
+# Contract address as ID
+type Contract @entity {
+  id: ID! 
+  numChallenges: BigInt!
+  numChallengers: BigInt!
+  numVideos: BigInt!
+  totalFund: BigInt!
+}
+
+# ChallengId as ID
+type Challenge @entity {
   id: ID!
-  owner: Bytes!
-  displayName: String!
-  imageUrl: String!
+  creator: Bytes!
+  startTxnHash: String!
+  startTimestamp: BigInt!
+  title: String
+  description: String
+  beneficiary: Bytes!
+  invitedAddresses: [String!]
+  videos: [Video!]! @derivedFrom(field: "challenge")
+  challengers: [String!]! 
+  numChallengers: BigInt!
+  isPublic: Boolean
+  isActive: Boolean
+  endTimestamp: BigInt!
+  resolveTimestamp: BigInt # null means still ongoing
+  resolveTxnHash: String
+  winner: Account
+  minEntryFee: BigInt!
+  totalFund: BigInt!
+}
+
+# Account eth address as ID
+type Account @entity {
+  id: ID!
+  numChallenges: BigInt!
+  challenges: [Challenge!]
+  totalFund: BigInt!
+  wins: [Challenge!]
+}
+
+# Video IPFS Hash as ID
+type Video @entity {
+  id: ID!
+  creator: Bytes!
+  challenge: Challenge!
+  uploadTxnHash: String!
+  uploadTimestamp: BigInt!
+}
+
+# Lowercase Tags name as ID
+type Tags @entity {
+  id: ID!
+  numVideos: BigInt!
+  numChallenges: BigInt!
+#  challenge: [Challenge] @derivedFrom(field: "tag")
+#  videos: [Video] @derivedFrom(field: "tag")
 }

@@ -2,9 +2,9 @@
   "name": "denver",
   "version": "0.1.0",
   "scripts": {
-    "build-contract": "solc contracts/Gravity.sol --abi -o abis --overwrite && solc contracts/Gravity.sol --bin -o bin --overwrite",
     "create": "graph create ehsueh/denver --node https://api.thegraph.com/deploy/",
     "create-local": "graph create ehsueh/denver --node http://127.0.0.1:8020",
+    "prep:rinkeby": "mustache networks/rinkeby.json subgraph.template.yaml > subgraph.yaml && yarn codegen;",
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy ehsueh/denver --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
@@ -17,6 +17,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
+    "mustache": "^4.1.0",
     "truffle": "^5.0.4",
     "truffle-contract": "^4.0.5",
     "truffle-hdwallet-provider": "^1.0.4"
