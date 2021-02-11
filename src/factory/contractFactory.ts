@@ -1,5 +1,5 @@
 import { Contract } from "../../generated/schema";
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, log } from "@graphprotocol/graph-ts"
 
 export function loadOrCreateContract(
   contractId: string
@@ -10,9 +10,10 @@ export function loadOrCreateContract(
     contract = new Contract(contractId)
     contract.numChallengers = BigInt.fromI32(0)
     contract.numChallenges = BigInt.fromI32(0)
-    contract.numInvitations = BigInt.fromI32(0)
     contract.numVideos = BigInt.fromI32(0)
+    contract.numInvitations = BigInt.fromI32(0)
     contract.totalFund = BigInt.fromI32(0)
+    log.warning("[loadOrCreateContract] New contract created: {}", [contractId])
   }
   return contract as Contract
   

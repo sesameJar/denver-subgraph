@@ -144,27 +144,20 @@ export function handleNewChallengerJumpedIn(
   video.uploadTimestamp = event.block.timestamp
   video.save()
   // Update the challenge
-  log.warning("test {}", ["1"])
   let challenge = loadOrCreateChallenge(starRelay, event.params.challengeId)
-  log.warning("test {}", ["1.2"])
   challenge.totalFund = event.params.totalFund
-  let challengers = challenge.challengers
   let newChallenger = loadOrCreateAccount(starRelay, video.creator)
-  log.warning("test {}", ["1.5"]) 
-  if (!challengers.includes(newChallenger.id)) {
+  // if (!challenge.challengers.includes(newChallenger.id)) {
     challenge.numChallengers = challenge.numChallengers.plus(BigInt.fromI32(1))
-    log.warning("test {}", ["2"])
-
     // Update the account
-    let challenges = newChallenger.challenges
-    challenges.push(challenge.id)
-    newChallenger.challenges = challenges
+    let accountChallenges = newChallenger.challenges
+    accountChallenges.push(challenge.id)
+    newChallenger.challenges = accountChallenges
     newChallenger.numChallenges = newChallenger.numChallenges.plus(BigInt.fromI32(1))
     newChallenger.totalFund = newChallenger.totalFund.plus(event.transaction.value)
     newChallenger.save()
-  }
+  // }
   challenge.save()
-  log.warning("test {}", ["3"])
 
 }
 
