@@ -78,7 +78,6 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   challenge.startTxnHash = event.transaction.hash.toHexString()
   challenge.startTimestamp = event.block.timestamp
   challenge.beneficiary = event.params.beneficiary
-  challenge.challengers = [event.params.creator.toHexString()]
   challenge.isPublic = challengeStruct.value0 
   challenge.isActive = challengeStruct.value1
   challenge.endTimestamp = event.params.endTimestamp
@@ -96,13 +95,13 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   creator.save()
 
   // Create the video
-  let video = loadOrCreateVideo(starRelay, event.params.ipfsHash)
+  let video = loadOrCreateVideo(starRelay, challenge.firstVideoIpfsHash)
   video.creator = creator.id
   video.challenge = challengeId.toString()
   video.uploadTxnHash = event.transaction.hash.toHexString()
   video.uploadTimestamp = event.block.timestamp
   video.save()
-
+  
 }
 
 export function handleNewChallengerJumpedIn(

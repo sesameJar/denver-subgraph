@@ -23,6 +23,8 @@ type Challenge @entity {
   isPublic: Boolean
   endTimestamp: BigInt!
   minEntryFee: BigInt!
+  metadataIpfsHash: String!
+  firstVideoIpfsHash: String!
   #########################
   # mutable
   #########################

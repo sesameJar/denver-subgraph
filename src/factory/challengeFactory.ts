@@ -1,7 +1,8 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, ipfs, JSONValue, Result, json, Bytes } from "@graphprotocol/graph-ts"
 import { Challenge } from "../../generated/schema"
 import { StarRelay } from "../../generated/StarRelay/StarRelay"
 import { loadOrCreateContract } from "./contractFactory"
+import { loadOrCreateVideo } from "./videoFactory"
 
 export function loadOrCreateChallenge(
   starRelay: StarRelay,
@@ -18,4 +19,25 @@ export function loadOrCreateChallenge(
   }
   return challenge as Challenge
   
+}
+
+export function fillIPFSMetaData(starRelay: StarRelay, challenge: Challenge): void {
+
+  let data = ipfs.cat('/ipfs/' + challenge.metadataIPFSHash)
+  if (data === null) {
+    // Try again
+    data = ipfs.cat('/ipfs/' + challenge.metadataIPFSHash)
+  }
+  if (data !== null) {
+    let result: Result<JSONValue, boolean> = json.try_fromBytes(data as Bytes)
+    if (result.isOk) {
+      let jsonData = result.value;
+      let jsonObject = jsonData.toObject();
+      challenge.title = jsonObject.get('name').toString()
+      challenge.description = jsonObject.get('description').toString()
+      challenge.firstVideoIpfsHash = jsonObject.get('videoUri').toString()
+      challenge.save()
+    }
+  }
+
 }
