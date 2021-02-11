@@ -6,9 +6,9 @@ dataSources:
     name: StarRelay
     network: rinkeby
     source:
-      address: "0x415c3DFd8989D52e2C4f05A65fC5415Be722b2Ac"
+      address: "0x20Bbc58C79251C8212EE3E356236B10FfC84D827"
       abi: StarRelay
-      startBlock: 8047625
+      startBlock: 8051993
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -39,6 +39,4 @@ dataSources:
           handler: handleNewChallengerJumpedIn
         - event: Invitation(indexed uint256,indexed address,indexed address)
           handler: handleInvitation
-        - event: Test(string)
-          handler: handleTest
       file: StarRelay/StarRelay.wasm

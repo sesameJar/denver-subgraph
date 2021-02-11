@@ -8,8 +8,7 @@ import {
   FundsSplitted,
   NewChallengeStarted,
   NewChallengerJumpedIn,
-  Invitation,
-  Test
+  Invitation
 } from "../generated/StarRelay/StarRelay"
 import { loadOrCreateAccount } from "./factory/accountFactory"
 import { loadOrCreateChallenge } from "./factory/challengeFactory"
@@ -154,5 +153,3 @@ export function handleInvitation(event: Invitation): void {
   invite.save()
 
 }
-
-export function handleTest(event: Test): void {}

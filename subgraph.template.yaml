@@ -39,6 +39,4 @@ dataSources:
           handler: handleNewChallengerJumpedIn
         - event: Invitation(indexed uint256,indexed address,indexed address)
           handler: handleInvitation
-        - event: Test(string)
-          handler: handleTest
       file: ./src/starRelayMapping.ts

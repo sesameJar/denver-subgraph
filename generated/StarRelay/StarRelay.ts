@@ -214,24 +214,6 @@ export class NewChallengerJumpedIn__Params {
   }
 }
 
-export class Test extends ethereum.Event {
-  get params(): Test__Params {
-    return new Test__Params(this);
-  }
-}
-
-export class Test__Params {
-  _event: Test;
-
-  constructor(event: Test) {
-    this._event = event;
-  }
-
-  get message(): string {
-    return this._event.parameters[0].value.toString();
-  }
-}
-
 export class StarRelay__challengesResult {
   value0: boolean;
   value1: boolean;
@@ -240,6 +222,8 @@ export class StarRelay__challengesResult {
   value4: BigInt;
   value5: Address;
   value6: Address;
+  value7: Address;
+  value8: string;
 
   constructor(
     value0: boolean,
@@ -248,7 +232,9 @@ export class StarRelay__challengesResult {
     value3: BigInt,
     value4: BigInt,
     value5: Address,
-    value6: Address
+    value6: Address,
+    value7: Address,
+    value8: string
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -257,6 +243,8 @@ export class StarRelay__challengesResult {
     this.value4 = value4;
     this.value5 = value5;
     this.value6 = value6;
+    this.value7 = value7;
+    this.value8 = value8;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -268,6 +256,8 @@ export class StarRelay__challengesResult {
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     map.set("value5", ethereum.Value.fromAddress(this.value5));
     map.set("value6", ethereum.Value.fromAddress(this.value6));
+    map.set("value7", ethereum.Value.fromAddress(this.value7));
+    map.set("value8", ethereum.Value.fromString(this.value8));
     return map;
   }
 }
@@ -323,7 +313,7 @@ export class StarRelay extends ethereum.SmartContract {
   challenges(param0: BigInt): StarRelay__challengesResult {
     let result = super.call(
       "challenges",
-      "challenges(uint256):(bool,bool,uint256,uint256,uint256,address,address)",
+      "challenges(uint256):(bool,bool,uint256,uint256,uint256,address,address,address,string)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -334,7 +324,9 @@ export class StarRelay extends ethereum.SmartContract {
       result[3].toBigInt(),
       result[4].toBigInt(),
       result[5].toAddress(),
-      result[6].toAddress()
+      result[6].toAddress(),
+      result[7].toAddress(),
+      result[8].toString()
     );
   }
 
@@ -343,7 +335,7 @@ export class StarRelay extends ethereum.SmartContract {
   ): ethereum.CallResult<StarRelay__challengesResult> {
     let result = super.tryCall(
       "challenges",
-      "challenges(uint256):(bool,bool,uint256,uint256,uint256,address,address)",
+      "challenges(uint256):(bool,bool,uint256,uint256,uint256,address,address,address,string)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -358,7 +350,9 @@ export class StarRelay extends ethereum.SmartContract {
         value[3].toBigInt(),
         value[4].toBigInt(),
         value[5].toAddress(),
-        value[6].toAddress()
+        value[6].toAddress(),
+        value[7].toAddress(),
+        value[8].toString()
       )
     );
   }
@@ -386,36 +380,6 @@ export class StarRelay extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  fee(): BigInt {
-    let result = super.call("fee", "fee():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_fee(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("fee", "fee():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  jobId(): Bytes {
-    let result = super.call("jobId", "jobId():(bytes32)", []);
-
-    return result[0].toBytes();
-  }
-
-  try_jobId(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall("jobId", "jobId():(bytes32)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
   numChallenges(): BigInt {
     let result = super.call("numChallenges", "numChallenges():(uint256)", []);
 
@@ -433,21 +397,6 @@ export class StarRelay extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  oracle(): Address {
-    let result = super.call("oracle", "oracle():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_oracle(): ethereum.CallResult<Address> {
-    let result = super.tryCall("oracle", "oracle():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   videos(param0: string): StarRelay__videosResult {
@@ -483,21 +432,6 @@ export class StarRelay extends ethereum.SmartContract {
     );
   }
 
-  volume(): BigInt {
-    let result = super.call("volume", "volume():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_volume(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("volume", "volume():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   winnerPercentage(): BigInt {
     let result = super.call(
       "winnerPercentage",
@@ -519,29 +453,6 @@ export class StarRelay extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  requestVolumeData(): Bytes {
-    let result = super.call(
-      "requestVolumeData",
-      "requestVolumeData():(bytes32)",
-      []
-    );
-
-    return result[0].toBytes();
-  }
-
-  try_requestVolumeData(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "requestVolumeData",
-      "requestVolumeData():(bytes32)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 }
 
@@ -653,80 +564,12 @@ export class ResolveChallengeCall__Inputs {
   get _challengeId(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
-
-  get _winner(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
 }
 
 export class ResolveChallengeCall__Outputs {
   _call: ResolveChallengeCall;
 
   constructor(call: ResolveChallengeCall) {
-    this._call = call;
-  }
-}
-
-export class RequestVolumeDataCall extends ethereum.Call {
-  get inputs(): RequestVolumeDataCall__Inputs {
-    return new RequestVolumeDataCall__Inputs(this);
-  }
-
-  get outputs(): RequestVolumeDataCall__Outputs {
-    return new RequestVolumeDataCall__Outputs(this);
-  }
-}
-
-export class RequestVolumeDataCall__Inputs {
-  _call: RequestVolumeDataCall;
-
-  constructor(call: RequestVolumeDataCall) {
-    this._call = call;
-  }
-}
-
-export class RequestVolumeDataCall__Outputs {
-  _call: RequestVolumeDataCall;
-
-  constructor(call: RequestVolumeDataCall) {
-    this._call = call;
-  }
-
-  get requestId(): Bytes {
-    return this._call.outputValues[0].value.toBytes();
-  }
-}
-
-export class FulfillCall extends ethereum.Call {
-  get inputs(): FulfillCall__Inputs {
-    return new FulfillCall__Inputs(this);
-  }
-
-  get outputs(): FulfillCall__Outputs {
-    return new FulfillCall__Outputs(this);
-  }
-}
-
-export class FulfillCall__Inputs {
-  _call: FulfillCall;
-
-  constructor(call: FulfillCall) {
-    this._call = call;
-  }
-
-  get _requestId(): Bytes {
-    return this._call.inputValues[0].value.toBytes();
-  }
-
-  get _volume(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class FulfillCall__Outputs {
-  _call: FulfillCall;
-
-  constructor(call: FulfillCall) {
     this._call = call;
   }
 }

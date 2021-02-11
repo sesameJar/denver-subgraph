@@ -194,19 +194,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "message",
-        "type": "string"
-      }
-    ],
-    "name": "Test",
-    "type": "event"
-  },
-  {
     "inputs": [],
     "name": "beneficiaryPercentage",
     "outputs": [
@@ -264,6 +251,16 @@
         "internalType": "address payable",
         "name": "beneficiary",
         "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "lastChallenger",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "lastVideoHash",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -286,54 +283,12 @@
   },
   {
     "inputs": [],
-    "name": "fee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "jobId",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
     "name": "numChallenges",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "oracle",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -363,20 +318,6 @@
       {
         "internalType": "uint256",
         "name": "challengeId",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "volume",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
         "type": "uint256"
       }
     ],
@@ -468,11 +409,6 @@
         "internalType": "uint256",
         "name": "_challengeId",
         "type": "uint256"
-      },
-      {
-        "internalType": "address payable",
-        "name": "_winner",
-        "type": "address"
       }
     ],
     "name": "resolveChallenge",
@@ -480,36 +416,5 @@
     "stateMutability": "payable",
     "type": "function",
     "payable": true
-  },
-  {
-    "inputs": [],
-    "name": "requestVolumeData",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "requestId",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_requestId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_volume",
-        "type": "uint256"
-      }
-    ],
-    "name": "fulfill",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   }
 ]
