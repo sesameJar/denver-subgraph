@@ -24,7 +24,7 @@ type Challenge @entity {
   endTimestamp: BigInt!
   minEntryFee: BigInt!
   metadataIpfsHash: String!
-  firstVideoIpfsHash: String!
+  firstVideoIpfsHash: String
   #########################
   # mutable
   #########################

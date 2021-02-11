@@ -1,4 +1,5 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, ipfs, JSONValue, Result, json, Bytes, log } from "@graphprotocol/graph-ts"
+
 import {
   StarRelay,
   ChainlinkCancelled,
@@ -68,13 +69,15 @@ export function handleFundsSplitted(event: FundsSplitted): void {}
 
 export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   
+  log.debug("[handleNewChallengeStarted] ", [event.transaction.hash.toHexString()])
+
   // Create a new challenge
   let challengeId = event.params.challengeId
   let starRelay = StarRelay.bind(event.address)
-
   let challenge = loadOrCreateChallenge(starRelay, challengeId)
   let challengeStruct = starRelay.challenges(challengeId)
   challenge.creator = event.params.creator
+  challenge.metadataIpfsHash = event.params.ipfsHash
   challenge.startTxnHash = event.transaction.hash.toHexString()
   challenge.startTimestamp = event.block.timestamp
   challenge.beneficiary = event.params.beneficiary
@@ -83,7 +86,26 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   challenge.endTimestamp = event.params.endTimestamp
   challenge.minEntryFee = challengeStruct.value3
   challenge.totalFund = challengeStruct.value2
+
+  // Fill metadata from IPFS
+  let data = ipfs.cat('/ipfs/' + challenge.metadataIpfsHash)
+  log.debug("[fillIpfsMetadata] {}", [data.toString()])
+  if (data === null) {
+    // Try again
+    data = ipfs.cat('/ipfs/' + challenge.metadataIpfsHash)
+  }
+  if (data !== null) {
+    let result: Result<JSONValue, boolean> = json.try_fromBytes(data as Bytes)
+    if (result.isOk) {
+      let jsonData = result.value;
+      let jsonObject = jsonData.toObject();
+      challenge.title = jsonObject.get('title').toString()
+      challenge.description = jsonObject.get('description').toString()
+      challenge.firstVideoIpfsHash = jsonObject.get('videoUri').toString()
+    }
+  }
   challenge.save()
+  log.debug("[handleNewChallengeStarted] updated challenge entity: {} {} {}", [challengeId.toString(), challenge.metadataIpfsHash, challenge.totalFund.toString()])
 
   // Update the account
   let creator = loadOrCreateAccount(starRelay, event.params.creator.toHexString())
@@ -93,6 +115,7 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   creator.challenges = challenges
   creator.totalFund = creator.totalFund.plus(event.transaction.value)
   creator.save()
+  log.debug("[handleNewChallengeStarted] updated account entity: {} {}", [creator.id.toString(), creator.totalFund.toString()])
 
   // Create the video
   let video = loadOrCreateVideo(starRelay, challenge.firstVideoIpfsHash)
@@ -101,30 +124,36 @@ export function handleNewChallengeStarted(event: NewChallengeStarted): void {
   video.uploadTxnHash = event.transaction.hash.toHexString()
   video.uploadTimestamp = event.block.timestamp
   video.save()
-  
+  log.debug("[handleNewChallengeStarted] updated video entity: {} {}", [video.id.toString(), creator.id.toString()])
+
 }
 
 export function handleNewChallengerJumpedIn(
   event: NewChallengerJumpedIn
 ): void {
 
+  log.debug("[handleNewChallengerJumpedIn] {}", [event.transaction.hash.toHexString()])
+
   let starRelay = StarRelay.bind(event.address)
 
   // Create the video
   let video = loadOrCreateVideo(starRelay, event.params.ipfsHash)
-  video.creator = event.params.challenger.toString()
+  video.creator = event.params.challenger.toHexString()
   video.challenge = event.params.challengeId.toString()
   video.uploadTxnHash = event.transaction.hash.toHexString()
   video.uploadTimestamp = event.block.timestamp
   video.save()
-
   // Update the challenge
+  log.warning("test {}", ["1"])
   let challenge = loadOrCreateChallenge(starRelay, event.params.challengeId)
+  log.warning("test {}", ["1.2"])
   challenge.totalFund = event.params.totalFund
   let challengers = challenge.challengers
   let newChallenger = loadOrCreateAccount(starRelay, video.creator)
+  log.warning("test {}", ["1.5"]) 
   if (!challengers.includes(newChallenger.id)) {
     challenge.numChallengers = challenge.numChallengers.plus(BigInt.fromI32(1))
+    log.warning("test {}", ["2"])
 
     // Update the account
     let challenges = newChallenger.challenges
@@ -135,10 +164,13 @@ export function handleNewChallengerJumpedIn(
     newChallenger.save()
   }
   challenge.save()
+  log.warning("test {}", ["3"])
 
 }
 
 export function handleInvitation(event: Invitation): void {
+
+  log.debug("[handleInvitation] {}", [event.transaction.hash.toHexString()])
 
   let starRelay = StarRelay.bind(event.address)
 

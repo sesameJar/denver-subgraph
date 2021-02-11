@@ -215,6 +215,32 @@ export class Challenge extends Entity {
     this.set("minEntryFee", Value.fromBigInt(value));
   }
 
+  get metadataIpfsHash(): string {
+    let value = this.get("metadataIpfsHash");
+    return value.toString();
+  }
+
+  set metadataIpfsHash(value: string) {
+    this.set("metadataIpfsHash", Value.fromString(value));
+  }
+
+  get firstVideoIpfsHash(): string | null {
+    let value = this.get("firstVideoIpfsHash");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set firstVideoIpfsHash(value: string | null) {
+    if (value === null) {
+      this.unset("firstVideoIpfsHash");
+    } else {
+      this.set("firstVideoIpfsHash", Value.fromString(value as string));
+    }
+  }
+
   get videos(): Array<string> {
     let value = this.get("videos");
     return value.toStringArray();
