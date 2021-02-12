@@ -16,15 +16,10 @@ import { loadOrCreateChallenge } from "./factory/challengeFactory"
 import { loadOrCreateInvitation } from "./factory/invitationFactory"
 import { loadOrCreateVideo } from "./factory/videoFactory"
 
-// It is also possible to access smart contracts from mappings. For
-// example, the contract that has emitted the event can be connected to
-// with:
-//
-// let starRelay = StarRelay.bind(event.address)
-//
 // The following functions can then be called on this contract to access
 // state variables and other data:
 //
+// let starRelay = StarRelay.bind(event.address)
 // - starRelay.beneficiaryPercentage(...)
 // - starRelay.challenges(...)
 // - starRelay.creatorPercentage(...)
@@ -147,15 +142,17 @@ export function handleNewChallengerJumpedIn(
   let challenge = loadOrCreateChallenge(starRelay, event.params.challengeId)
   challenge.totalFund = event.params.totalFund
   let newChallenger = loadOrCreateAccount(starRelay, video.creator)
+  // TODO decide if want to count number of distinct challengers.
+  // Currently we are counting number of challenger submissions.
   // if (!challenge.challengers.includes(newChallenger.id)) {
-    challenge.numChallengers = challenge.numChallengers.plus(BigInt.fromI32(1))
-    // Update the account
-    let accountChallenges = newChallenger.challenges
-    accountChallenges.push(challenge.id)
-    newChallenger.challenges = accountChallenges
-    newChallenger.numChallenges = newChallenger.numChallenges.plus(BigInt.fromI32(1))
-    newChallenger.totalFund = newChallenger.totalFund.plus(event.transaction.value)
-    newChallenger.save()
+  challenge.numChallengers = challenge.numChallengers.plus(BigInt.fromI32(1))
+  // Update the account
+  let accountChallenges = newChallenger.challenges
+  accountChallenges.push(challenge.id)
+  newChallenger.challenges = accountChallenges
+  newChallenger.numChallenges = newChallenger.numChallenges.plus(BigInt.fromI32(1))
+  newChallenger.totalFund = newChallenger.totalFund.plus(event.transaction.value)
+  newChallenger.save()
   // }
   challenge.save()
 
