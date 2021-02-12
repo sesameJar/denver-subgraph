@@ -67,6 +67,7 @@ type Invitation @entity {
   inviteTimestamp: BigInt!
 }
 
+# Coming soon
 # Lowercase Tags name as ID
 type Tags @entity {
   id: ID!
